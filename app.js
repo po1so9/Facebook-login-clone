@@ -12,11 +12,20 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 
-const port = 3000;
-const home = app.use(express.static(path.join(__dirname,'public')))
-app.get('/login', (req,res) => {
-    res.send(home);
-})
+
+app.set('view engine','ejs'); 
+
+app.engine('ejs', require('ejs').__express);
+
+app.use(express.static(path.join(__dirname,'public')))
+
+app.get('/login', (req, res) => {
+    res.render('index');
+});
+
+app.get('/register', (req, res) => {
+    res.render('signup');
+});
 
 
 
@@ -42,7 +51,7 @@ app.post('/login', async (req, res) => {
 });
 
 
-
+const port = 3000;
 const start = async () =>{
     try {
         await connectDB(process.env.MONGO_URI)
