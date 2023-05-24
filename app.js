@@ -8,9 +8,7 @@ require('dotenv').config();
 
 app = express()
 app.use(express.json());
-app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-
 
 
 app.set('view engine','ejs'); 
@@ -31,8 +29,6 @@ app.get('/register', (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
-      const { username, password } = req.body;
-  
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
   
