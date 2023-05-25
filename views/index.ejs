@@ -5,8 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="img/Facebook_Logo_(2019).png.webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Facebook - Log in or Sign Up</title>  
+    <title>Facebook - Log in or Sign Up</title> 
+    
 </head>
 <body>
     <div id = "container">
@@ -26,15 +28,18 @@
                 </div>
             </div>    
         </div>
+        <form action="/login" method="POST" enctype = "multipart/form-data">
             <div id = "login">
-                <input type="email" placeholder="Email or Phone number">
-                <input type="password" placeholder="Password">
-                <input type="button" value="Log In" id = "login-button">
+                <input type="text" placeholder="Email or Phone number" name="email_phone" required>
+                <input type="password" placeholder="Password" name="pass" id="password" required>
+                <!-- <i class="far fa-eye" id="togglePassword"></i> -->
+                <button type="submit" id = "login-button">Log In</button>
                 <a href="#">Forgot password?</a>
                 <hr style="width: 95%;">
-            <a href="/register"><input type= "button" value="Create new account"id = "create-new-account"></a>
-            <p><strong>Create a Page</strong> for a celebrity, brand or business.</p>
-        </div>
+                <a href="/register"><input type= "button" value="Create new account"id = "create-new-account"></a>
+                <p><strong>Create a Page</strong> for a celebrity, brand or business.</p>
+            </div>
+        </form>
     </div>
     <footer>
         <div>
@@ -60,5 +65,17 @@
             Meta © 2022   
         </div>
     </footer>
+    <!-- <script>
+        const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+
+  togglePassword.addEventListener('click', function (e) {
+    // toggle the type attribute
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    // toggle the eye slash icon
+    this.classList.toggle('fa-eye-slash');
+});
+    </script>  -->
 </body>
 </html>
