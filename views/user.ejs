@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= user.firstname  %> <%= user.surname  %></title>
+  <!-- <title>Hello</title> -->
+  <title><%= User.firstname  %> <%= User.surname  %></title>
 </head>
 <body>
-  <h1>Welcome <%= user.firstname  %> <%= user.surname  %>!</h1>
-  <p>Email: <%= user.mobile_email %></p>
-  <p>DOB: <%= user.dob.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
-  <p>Gender: <%= user.gender %></p>
-  <!-- Display other user information as needed -->
+  <h1>Welcome <%= User.firstname  %> <%= User.surname  %>!</h1>
+  <p>Email: <%= User.mobile_email %></p>
+  <p>DOB: <%= User.dob.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+  <p>Gender: <%= User.gender %></p>
+  <form action="/logout" method="post">
+    <button type="submit">Log Out</button>
+  </form>
+  
+  <!-- Display other User information as needed -->
 </body>
 </html>
