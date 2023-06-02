@@ -3,6 +3,8 @@ const path = require('path');
 const Register = require('./model/model')
 const connectDB = require('./db/connection')
 var bodyParser = require('body-parser');
+const session = require('express-session');
+const mongoDBSession = require('connect-mongodb-session')(session);
 var bcrypt = require('bcrypt');
 const multer = require('multer');
 require('dotenv').config();
@@ -22,6 +24,19 @@ app.engine('ejs', require('ejs').__express);
 
 app.use(express.static(path.join(__dirname,'public')))
 
+const isAuth = (req,res,next)=>{
+
+    if(req.session.isAuth){
+        next();
+    }
+    else {
+        res.redirect('/login');
+    }
+    // if(req.session.user){
+    //     next();
+    // }
+}
+
 app.get('/login', (req, res) => {
     res.render('index');
 });
@@ -30,6 +45,33 @@ app.get('/register', async (req, res) => {
     res.render('signup');
 });
 
+
+const store = new mongoDBSession({
+    uri: process.env.MONGO_URI,
+    collection: 'session'
+})
+
+app.use(
+    session({
+        secret: "MYSECRET",
+        resave: false,
+        saveUninitialized: false,
+        store: store
+        
+    })
+    );
+    
+app.get('/',isAuth, async (req,res)=>{
+    // const user = req.session.user;
+    // console.log(user);
+    const user = req.session.user;
+    // console.log(user.mobile_email);
+    const User = await Register.findOne({mobile_email:user.mobile_email});
+    // console.log(User);
+    // console.log(user)
+    res.render('user', {User});
+});
+    
 app.post('/register', upload.none(), async (req, res) => {
     const dd =req.body.dd;
     const mm =req.body.mm;
@@ -42,8 +84,9 @@ app.post('/register', upload.none(), async (req, res) => {
     // console.log(req.body.password)
     // console.log(dateofbirth);
     //  console.log(req.body.gender)
-   
-
+    const email = req.body.mobile_email;
+    let alreadyExist = await Register.findOne({email});
+    if(alreadyExist) return res.redirect('/register')
     try {
       // Hash the password
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -90,7 +133,14 @@ app.post('/register', upload.none(), async (req, res) => {
             console.log(err)
         })
         if (passwordMatch) {
-            res.render('user', {user})
+            req.session.user = {
+                mobile_email: email_phone,
+              };
+            
+            // res.render('user', {user})
+            req.session.isAuth = true;
+            res.redirect('/')
+
             //console.log(user);
             //res.status(200).send(user);
             // res.redirect(`/login/user/${user.firstname}${user.surname}`)
@@ -108,6 +158,13 @@ app.post('/register', upload.none(), async (req, res) => {
     res.status(500).send('Internal Server Error');
 }
 });
+
+app.post('/logout', (req,res)=>{
+    req.session.destroy((err)=>{
+        if(err) throw err;
+        res.redirect('/login')
+    })
+})
 
 // app.get(`login/user/:username`, (req, res)=>{
 //     const username = req.user;
