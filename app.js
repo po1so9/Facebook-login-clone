@@ -177,7 +177,7 @@ app.post('/logout', (req,res)=>{
 
 
 
-const port = 3000;
+port = process.env.PORT || 5000
 const start = async () =>{
     try {
         await connectDB(process.env.MONGO_URI)
